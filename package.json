@@ -16,5 +16,12 @@
     "url": "https://github.com/Tammy200/Task-manager-api/issues"
   },
   "homepage": "https://github.com/Tammy200/Task-manager-api#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.10.0"
+  }
 }
