@@ -1,5 +1,5 @@
 const express = require('express');
-const user = require('../models/User'); // Correct path (going up two levels)
+const User = require('../user'); // Correct path to User model
 const router = express.Router();
 
 router.get('/', (req, res) => {
