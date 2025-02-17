@@ -48,4 +48,80 @@ router.post('/', auth, async (req, res) => {
 
 //fetch a task by id
 
+router.get('/:id', auth , async (req,res)=>{
+    const taskid = req.params.id;
+
+    try{
+        const task = await Task.findOne({
+            _id: taskid,
+            owner: req.user._id
+        });
+        if(!task){
+            return res.status(404).json({message: "Task not found"});
+        }
+        res.status(200).json({task, message: "Task Fetched Successfully"});
+    }
+    catch(err){
+        res.status(500).send({error: err});
+    }
+})
+
+// update a task by id   -   description , completed
+router.patch('/:id', auth , async (req,res)=>{
+    const taskid = req.params.id;
+    const updates = Object.keys(req.body);
+    // {
+    //     description : "new description",
+    //     completed: true,
+    //     owner : "asherkine"
+    // }
+    const allowedUpdates = ['description', 'completed'];
+    const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+
+    if(!isValidOperation){
+        return res.status(400).json({error: "Invalid Updates"});
+    }
+
+    try{
+      const task = await Task.findOne({
+            _id: taskid,
+            owner: req.user._id
+      });
+
+        if(!task){
+            return res.status(404).json({message: "Task not found"});
+        }
+
+        updates.forEach(update => task[update] = req.body[update]);
+        await task.save();
+
+        res.json({
+            message: "Task Updated Successfully",
+        })
+    }
+    catch(err){
+        res.status(500).send({error: err});
+    }
+})
+
+
+// delete a task by id
+router.delete('/:id', auth , async (req,res)=>{
+    const taskid = req.params.id;
+
+    try{
+        const task = await Task.findOneAndDelete({
+            _id: taskid,
+            owner: req.user._id
+        });
+        if(!task){
+            return res.status(404).json({message: "Task not found"});
+        }
+        res.status(200).json({task, message: "Task Deleted Successfully"});
+    }
+    catch(err){
+        res.status(500).send({error: err});
+    }
+})
+
 module.exports = router;
